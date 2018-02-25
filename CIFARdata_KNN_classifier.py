@@ -54,14 +54,34 @@ def load_CIFAR10(ROOT):
 
 def main():
     X_train, Y_train, X_test, Y_test = load_CIFAR10('data/cifar-10-batches-py/')
+    
     X_train_rows = X_train.reshape(X_train.shape[0], 32*32*3)
     X_test_rows = X_test.reshape(X_test.shape[0], 32*32*3)
+    
+    #validation variables
+    X_val_rows = X_train_rows[:1000, :]
+    Yval = Y_train[:1000]
+    Xtr_rows = X_train_rows[1000:, :]
+    Ytr = Y_train[1000:]
+    
+    #find hyperparameters that work best
+    validation_accuracies = []
+    for k in [1, 3, 5, 10, 20, 50, 100]:
+        nn = nearestNeighbor()
+        nn.train(Xtr_rows, Ytr)
+        
+        Yval_predict = nn.predict(X_val_rows, k= k)
+        acc = np.mean(Yval_predict==Yval)
+        print('Accuracy : %f", acc)
+        
+        validation_accuracies.append((k, acc))
     
     nn = NearestNeighbor()
     nn.train(X_train_rows, Y_train)
     Y_test_predict = nn.predict(X_test_rows)
     
     print("accuracy:%f" %(np.mean(Y_test_predict == Y_test)))
+    
     
 if __name__ == "__main__":
     main()
