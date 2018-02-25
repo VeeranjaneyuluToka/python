@@ -72,7 +72,7 @@ def main():
         
         Yval_predict = nn.predict(X_val_rows, k= k)
         acc = np.mean(Yval_predict==Yval)
-        print('Accuracy : %f", acc)
+        print('Accuracy : %f', acc)
         
         validation_accuracies.append((k, acc))
     
